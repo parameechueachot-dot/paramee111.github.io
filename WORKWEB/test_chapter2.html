@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบทดสอบ บทที่ 2 - วิชาวิทยาการคำนวณ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- ตั้งค่าตัวแปรสี --- */
+        :root {
+            --primary-green: #1B5E20;
+            --secondary-green: #4CAF50;
+            --test-orange: #F57F17;
+            --bg-white: #ffffff;
+            --bg-light: #f4f9f4;
+            --text-dark: #333333;
+            --text-light: #ffffff;
+        }
+
+        /* --- Reset & Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            font-weight: 400;
+            transition: 0.3s;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background-color: var(--secondary-green);
+        }
+
+        /* Hamburger Menu (Mobile) */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        /* --- Content --- */
+        .content-container {
+            max-width: 900px;
+            /* Narrower for better reading */
+            margin: 40px auto;
+            padding: 20px;
+            flex: 1;
+            width: 100%;
+        }
+
+        h1 {
+            color: var(--test-orange);
+            margin-bottom: 5px;
+            font-size: 2.2rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        /* --- Quiz Styles --- */
+        .quiz-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-block {
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .question-block:last-of-type {
+            border-bottom: none;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-green);
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            background-color: var(--bg-light);
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .option-label:hover {
+            background-color: #e8f5e9;
+        }
+
+        .option-label input[type="radio"] {
+            margin-top: 5px;
+            transform: scale(1.2);
+            accent-color: var(--test-orange);
+        }
+
+        .option-text {
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        /* Result States */
+        .option-label.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .option-label.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background-color: var(--test-orange);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background-color: #E65100;
+        }
+
+        .btn-submit:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .result-box {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background-color: #E8F5E9;
+            border: 2px solid var(--secondary-green);
+            border-radius: 12px;
+            margin-top: 40px;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .score-text {
+            font-size: 3rem;
+            font-weight: 600;
+            color: var(--primary-green);
+            margin: 10px 0;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--primary-green);
+            height: 10px;
+            margin-top: auto;
+        }
+
+        /* --- Mobile Responsive --- */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background-color: var(--primary-green);
+                flex-direction: column;
+                align-items: center;
+                padding-top: 50px;
+                transition: 0.4s;
+                z-index: 1001;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .quiz-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                🏫 โรงเรียนวังทองพิทยาคม
+            </div>
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html">หน้าแรก</a></li>
+                    <li><a href="history.html">เกี่ยวกับเรา</a></li>
+                    <li><a href="subjects.html" class="active">วิชา</a></li>
+                    <li><a href="http://www.wtp.ac.th/mainpage" target="_blank">ติดต่อเรา</a></li>
+                </ul>
+            </nav>
+            <div class="hamburger" id="hamburger">
+                ☰
+            </div>
+        </div>
+    </header>
+
+    <div class="content-container">
+        <div style="margin-bottom: 20px;">
+            <a href="tests.html"
+                style="display: inline-flex; align-items: center; gap: 8px; color: #F57F17; font-weight: 600; text-decoration: none; padding: 10px 15px; border-radius: 8px; background-color: #fff3e0; transition: background-color 0.3s;">
+                <span>←</span> กลับไปหน้ารวมแบบทดสอบ
+            </a>
+        </div>
+        <h1>แบบทดสอบ บทที่ 2</h1>
+        <div class="subtitle">เรื่อง การแก้ปัญหาด้วยการเขียนโปรแกรม</div>
+
+        <div class="quiz-container">
+            <form id="quizForm">
+
+                <!-- ข้อ 1 -->
+                <div class="question-block" id="q1">
+                    <div class="question-text">1. ข้อใดอธิบายการทำงานของ "ตัวดำเนินการตรรกศาสตร์ (Logical Operators)"
+                        เช่น AND, OR, NOT ได้ถูกต้องที่สุด?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q1" value="ก"> <span
+                                class="option-text">ก. ใช้สำหรับคำนวณทางคณิตศาสตร์พื้นฐาน เช่น บวก ลบ คูณ
+                                หาร</span></label>
+                        <label class="option-label"><input type="radio" name="q1" value="ข"> <span
+                                class="option-text">ข. ใช้ประเมินค่าความจริงเชิงซ้อน เพื่อให้ได้ผลลัพธ์เป็นจริง (True)
+                                หรือเท็จ (False)</span></label>
+                        <label class="option-label"><input type="radio" name="q1" value="ค"> <span
+                                class="option-text">ค. ใช้สำหรับจัดเก็บข้อมูลที่มีโครงสร้างซับซ้อน</span></label>
+                        <label class="option-label"><input type="radio" name="q1" value="ง"> <span
+                                class="option-text">ง. ใช้สำหรับจัดการข้อผิดพลาดที่เกิดขึ้นขณะรันโปรแกรม</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 2 -->
+                <div class="question-block" id="q2">
+                    <div class="question-text">2. โครงสร้างข้อมูลแบบใดที่ใช้หลักการจัดเก็บข้อมูลแบบ "จับคู่ (Key-Value
+                        Pairs)" เพื่อให้สามารถค้นหาและอ้างอิงข้อมูลได้อย่างรวดเร็ว?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q2" value="ก"> <span
+                                class="option-text">ก. อาร์เรย์ (Arrays)</span></label>
+                        <label class="option-label"><input type="radio" name="q2" value="ข"> <span
+                                class="option-text">ข. โครงสร้างต้นไม้ (Trees)</span></label>
+                        <label class="option-label"><input type="radio" name="q2" value="ค"> <span
+                                class="option-text">ค. พจนานุกรม (Dictionaries)</span></label>
+                        <label class="option-label"><input type="radio" name="q2" value="ง"> <span
+                                class="option-text">ง. รายการ (Lists)</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 3 -->
+                <div class="question-block" id="q3">
+                    <div class="question-text">3. หากต้องการเก็บข้อมูลที่มีความสัมพันธ์แบบลำดับชั้น (Hierarchical
+                        Relationship) เช่น แผนผังองค์กร หรือโครงสร้างโฟลเดอร์
+                        ควรใช้โครงสร้างข้อมูลแบบใดจึงจะเหมาะสมที่สุด?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q3" value="ก"> <span
+                                class="option-text">ก. โครงสร้างข้อมูลแบบเชิงเส้น (Linear Data
+                                Structures)</span></label>
+                        <label class="option-label"><input type="radio" name="q3" value="ข"> <span
+                                class="option-text">ข. โครงสร้างต้นไม้ (Trees)</span></label>
+                        <label class="option-label"><input type="radio" name="q3" value="ค"> <span
+                                class="option-text">ค. แฮชแมป (Hash Maps)</span></label>
+                        <label class="option-label"><input type="radio" name="q3" value="ง"> <span
+                                class="option-text">ง. อาร์เรย์ 2 มิติ (2D Arrays)</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 4 -->
+                <div class="question-block" id="q4">
+                    <div class="question-text">4. ข้อใดคือข้อดีหลักของการเขียนโปรแกรมเชิงโมดูล (Modular Programming)
+                        โดยการแบ่งย่อยชุดคำสั่งออกเป็น "ฟังก์ชัน (Functions)"?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q4" value="ก"> <span
+                                class="option-text">ก. ทำให้โปรแกรมทำงานได้เร็วขึ้นกว่าเดิม 10 เท่าเสมอ</span></label>
+                        <label class="option-label"><input type="radio" name="q4" value="ข"> <span
+                                class="option-text">ข. ช่วยลดการใช้พื้นที่ในฮาร์ดดิสก์ของคอมพิวเตอร์</span></label>
+                        <label class="option-label"><input type="radio" name="q4" value="ค"> <span
+                                class="option-text">ค. ป้องกันไม่ให้เกิดข้อผิดพลาดทางไวยากรณ์ (Syntax Error) ได้
+                                100%</span></label>
+                        <label class="option-label"><input type="radio" name="q4" value="ง"> <span
+                                class="option-text">ง. ทำให้จัดการโค้ดได้ง่ายขึ้น ตรวจสอบข้อผิดพลาดยาก
+                                และสามารถนำชุดคำสั่งกลับมาใช้ซ้ำได้ (Reusable)</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 5 -->
+                <div class="question-block" id="q5">
+                    <div class="question-text">5. ตัวแปรที่มี "ขอบเขต (Variable Scope)" แบบเฉพาะที่ (Local Variables)
+                        มีลักษณะการทำงานอย่างไร?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q5" value="ก"> <span
+                                class="option-text">ก.
+                                สามารถถูกเรียกใช้งานได้อย่างอิสระจากทุกส่วนของโปรแกรม</span></label>
+                        <label class="option-label"><input type="radio" name="q5" value="ข"> <span
+                                class="option-text">ข.
+                                ถูกสร้างและเรียกใช้งานได้เฉพาะภายในฟังก์ชันหรือบล็อกที่ประกาศตัวแปรนั้นไว้เท่านั้น</span></label>
+                        <label class="option-label"><input type="radio" name="q5" value="ค"> <span
+                                class="option-text">ค.
+                                เป็นตัวแปรที่ใช้สำหรับเก็บค่าคงที่ที่ไม่สามารถเปลี่ยนแปลงค่าได้อีก</span></label>
+                        <label class="option-label"><input type="radio" name="q5" value="ง"> <span
+                                class="option-text">ง.
+                                เป็นตัวแปรที่ต้องเชื่อมต่อกับอินเทอร์เน็ตเพื่อดึงข้อมูล</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 6 -->
+                <div class="question-block" id="q6">
+                    <div class="question-text">6. หากนักเรียนเขียนโปรแกรมคำนวณพื้นที่สี่เหลี่ยม
+                        โปรแกรมทำงานจนจบได้โดยไม่ค้าง
+                        แต่ผลลัพธ์ที่ได้ออกมาผิดพลาดเนื่องจากนักเรียนพิมพ์สูตรคณิตศาสตร์สลับกัน
+                        จัดเป็นข้อผิดพลาดประเภทใด?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q6" value="ก"> <span
+                                class="option-text">ก. ข้อผิดพลาดทางไวยากรณ์ (Syntax Error)</span></label>
+                        <label class="option-label"><input type="radio" name="q6" value="ข"> <span
+                                class="option-text">ข. ข้อผิดพลาดขณะทำงาน (Runtime Error)</span></label>
+                        <label class="option-label"><input type="radio" name="q6" value="ค"> <span
+                                class="option-text">ค. ข้อผิดพลาดทางตรรกะ (Logical Error)</span></label>
+                        <label class="option-label"><input type="radio" name="q6" value="ง"> <span
+                                class="option-text">ง. ข้อผิดพลาดของระบบปฏิบัติการ (OS Error)</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 7 -->
+                <div class="question-block" id="q7">
+                    <div class="question-text">7. กลไกการดักจับข้อยกเว้น (Exception Handling) เช่น การใช้คำสั่ง
+                        try-catch มีจุดประสงค์หลักเพื่อสิ่งใดในทางวิทยาการคอมพิวเตอร์?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q7" value="ก"> <span
+                                class="option-text">ก. เพื่อดักจับและจัดการความผิดปกติ
+                                ป้องกันไม่ให้โปรแกรมหยุดการทำงานอย่างกะทันหัน</span></label>
+                        <label class="option-label"><input type="radio" name="q7" value="ข"> <span
+                                class="option-text">ข. เพื่อแก้ไขข้อผิดพลาดที่พิมพ์โค้ดผิด (Syntax Error)
+                                ให้โดยอัตโนมัติ</span></label>
+                        <label class="option-label"><input type="radio" name="q7" value="ค"> <span
+                                class="option-text">ค. เพื่อเพิ่มความเร็วในการประมวลผลของลูป (Loop)</span></label>
+                        <label class="option-label"><input type="radio" name="q7" value="ง"> <span
+                                class="option-text">ง.
+                                เพื่อตรวจสอบการบุกรุกจากผู้ไม่หวังดีหรือไวรัสคอมพิวเตอร์</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 8 -->
+                <div class="question-block" id="q8">
+                    <div class="question-text">8. ในการวิเคราะห์ความซับซ้อนของอัลกอริทึม "Time Complexity"
+                        ใช้สำหรับประเมินสิ่งใด?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q8" value="ก"> <span
+                                class="option-text">ก. ปริมาณพื้นที่หน่วยความจำหรือ RAM
+                                ที่อัลกอริทึมต้องใช้ในการทำงาน</span></label>
+                        <label class="option-label"><input type="radio" name="q8" value="ข"> <span
+                                class="option-text">ข. อัตราการเพิ่มขึ้นของระยะเวลาที่อัลกอริทึมใช้ประมวลผล
+                                เมื่อขนาดของข้อมูลนำเข้า (Input) มีปริมาณมากขึ้น</span></label>
+                        <label class="option-label"><input type="radio" name="q8" value="ค"> <span
+                                class="option-text">ค.
+                                เวลาที่นักพัฒนาซอฟต์แวร์ต้องใช้ในการเขียนและทดสอบโปรแกรม</span></label>
+                        <label class="option-label"><input type="radio" name="q8" value="ง"> <span
+                                class="option-text">ง. ความเร็วของสัญญาณนาฬิกา (CPU Clock Speed)
+                                ที่เครื่องคอมพิวเตอร์ต้องมี</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 9 -->
+                <div class="question-block" id="q9">
+                    <div class="question-text">9. การออกแบบให้วงลูปหนึ่งซ้อนอยู่ภายในอีกวงลูปหนึ่ง (Nested Loops)
+                        มักถูกนำมาประยุกต์ใช้ในกรณีใดมากที่สุด?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q9" value="ก"> <span
+                                class="option-text">ก. การจัดการข้อมูลแบบมิติเดียว (1D Array)</span></label>
+                        <label class="option-label"><input type="radio" name="q9" value="ข"> <span
+                                class="option-text">ข. การรับค่ารหัสผ่านจากผู้ใช้งานเพียงครั้งเดียว</span></label>
+                        <label class="option-label"><input type="radio" name="q9" value="ค"> <span
+                                class="option-text">ค. การจัดการข้อมูลที่มีลักษณะเป็นตาราง แถวและคอลัมน์ (เช่น อาร์เรย์
+                                2 มิติ)</span></label>
+                        <label class="option-label"><input type="radio" name="q9" value="ง"> <span
+                                class="option-text">ง. การสุ่มตัวเลขเพื่อสร้างรหัสผ่านที่มีความปลอดภัยสูง</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 10 -->
+                <div class="question-block" id="q10">
+                    <div class="question-text">10. สัญกรณ์เชิงเส้นกำกับ (Asymptotic Notation) เช่น สัญลักษณ์ Big O
+                        มีประโยชน์อย่างไรในการออกแบบอัลกอริทึม?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q10" value="ก"> <span
+                                class="option-text">ก.
+                                ใช้สำหรับอธิบายหรือเปรียบเทียบประสิทธิภาพและอัตราการเติบโตของอัลกอริทึมในกรณีที่แย่ที่สุด
+                                (Worst-case scenario)</span></label>
+                        <label class="option-label"><input type="radio" name="q10" value="ข"> <span
+                                class="option-text">ข. ใช้เป็นภาษาโปรแกรมชนิดใหม่ที่ทำงานได้เร็วกว่า
+                                Python</span></label>
+                        <label class="option-label"><input type="radio" name="q10" value="ค"> <span
+                                class="option-text">ค. ใช้สำหรับวาดผังงาน (Flowchart) แบบ 3 มิติ</span></label>
+                        <label class="option-label"><input type="radio" name="q10" value="ง"> <span
+                                class="option-text">ง. ใช้เข้ารหัสข้อมูลความลับระดับสูง (Encryption)</span></label>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-submit" id="submitBtn">ส่งแบบทดสอบ</button>
+            </form>
+
+            <div class="result-box" id="resultBox">
+                <h3>ผลคะแนนสอบของคุณ</h3>
+                <div class="score-text"><span id="scoreDisplay">0</span> / 10</div>
+                <p id="feedbackText">เยี่ยมมาก! เลื่อนขึ้นไปด้านบนเพื่อดูเฉลยแต่ละข้อได้เลย</p>
+                <br>
+                <a href="tests.html"
+                    style="color: var(--secondary-green); font-weight: bold; text-decoration: underline;">กลับไปหน้ารวมแบบทดสอบ</a>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+    </footer>
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // --- Quiz System ---
+        const submitBtn = document.getElementById('submitBtn');
+        const resultBox = document.getElementById('resultBox');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const form = document.getElementById('quizForm');
+
+        // Answer Key for Chapter 2
+        const correctAnswers = {
+            q1: 'ข',
+            q2: 'ค',
+            q3: 'ข',
+            q4: 'ง',
+            q5: 'ข',
+            q6: 'ค',
+            q7: 'ก',
+            q8: 'ข',
+            q9: 'ค',
+            q10: 'ก'
+        };
+
+        submitBtn.addEventListener('click', () => {
+            let score = 0;
+            let answeredCount = 0;
+            const totalQuestions = Object.keys(correctAnswers).length;
+
+            // Basic validation to check if all answered
+            for (let i = 1; i <= totalQuestions; i++) {
+                const radios = document.getElementsByName('q' + i);
+                let isAnswered = false;
+                for (let r of radios) {
+                    if (r.checked) isAnswered = true;
+                }
+                if (isAnswered) answeredCount++;
+            }
+
+            if (answeredCount < totalQuestions) {
+                if (!confirm('คุณยังทำแบบทดสอบไม่ครบทุกข้อ ยืนยันที่จะส่งคำตอบหรือไม่?')) {
+                    return;
+                }
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = "กำลังตรวจคำตอบ...";
+
+            // Check answers and apply classes
+            for (let i = 1; i <= totalQuestions; i++) {
+                const questionName = 'q' + i;
+                const correctAnswer = correctAnswers[questionName];
+                const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`);
+                const allRadiosInQ = document.getElementsByName(questionName);
+
+                // Disable all inputs
+                allRadiosInQ.forEach(radio => radio.disabled = true);
+
+                // Find the correct label and mark it
+                const correctRadio = document.querySelector(`input[name="${questionName}"][value="${correctAnswer}"]`);
+                if (correctRadio) {
+                    correctRadio.closest('.option-label').classList.add('correct');
+                }
+
+                if (selectedOption) {
+                    const selectedValue = selectedOption.value;
+                    const selectedLabel = selectedOption.closest('.option-label');
+
+                    if (selectedValue === correctAnswer) {
+                        score++;
+                    } else {
+                        selectedLabel.classList.add('incorrect');
+                    }
+                }
+            }
+
+            // Display Score
+            setTimeout(() => {
+                submitBtn.style.display = 'none';
+                scoreDisplay.innerText = score;
+                resultBox.style.display = 'block';
+
+                // Scroll to result slightly delay
+                resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 600); // Small artificial delay for effect
+        });
+
+    </script>
+</body>
+
+</html>
