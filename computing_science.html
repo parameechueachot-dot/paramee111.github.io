@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>วิชาวิทยาการคำนวณ - โรงเรียนวังทองพิทยาคม</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- ตั้งค่าตัวแปรสี --- */
+        :root {
+            --primary-green: #1B5E20;
+            /* เขียวเข้มแบบโรงเรียน */
+            --secondary-green: #4CAF50;
+            /* เขียวสว่างสำหรับปุ่ม/Highlight */
+            --bg-white: #ffffff;
+            --bg-light: #f4f9f4;
+            /* สีพื้นหลังขาวอมเขียวจางๆ */
+            --text-dark: #333333;
+            --text-light: #ffffff;
+        }
+
+        /* --- Reset & Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            font-weight: 400;
+            transition: 0.3s;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background-color: var(--secondary-green);
+        }
+
+        /* Hamburger Menu (Mobile) */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        /* --- Content --- */
+        .content-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .content-container h1 {
+            color: var(--primary-green);
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            border-bottom: 3px solid var(--secondary-green);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .course-detail {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            text-align: left;
+            line-height: 1.8;
+        }
+
+        .course-detail h3 {
+            color: var(--primary-green);
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+        }
+
+        .course-detail p {
+            font-size: 1.15rem;
+            margin-bottom: 20px;
+            color: #444;
+            text-indent: 40px;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--primary-green);
+            height: 10px;
+            /* Minimal footer strip */
+            margin-top: auto;
+        }
+
+        /* --- Buttons --- */
+        .btn-primary {
+            display: inline-block;
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            color: var(--text-light);
+        }
+
+        /* --- Mobile Responsive --- */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background-color: var(--primary-green);
+                flex-direction: column;
+                align-items: center;
+                padding-top: 50px;
+                transition: 0.4s;
+                z-index: 1001;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                🏫 โรงเรียนวังทองพิทยาคม
+            </div>
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html">หน้าแรก</a></li>
+                    <li><a href="history.html">เกี่ยวกับเรา</a></li>
+                    <li><a href="subjects.html" class="active">วิชา</a></li>
+                    <li><a href="http://www.wtp.ac.th/mainpage" target="_blank">ติดต่อเรา</a></li>
+                </ul>
+            </nav>
+            <div class="hamburger" id="hamburger">
+                ☰
+            </div>
+        </div>
+    </header>
+
+    <div class="content-container">
+        <h1>วิทยาการคำนวณ (Computing Science)</h1>
+
+        <div class="course-detail">
+            <h3>คำอธิบายรายวิชา:</h3>
+            <p>
+                ศึกษาและฝึกทักษะการแก้ปัญหาอย่างเป็นขั้นตอนด้วย <strong>การคิดเชิงคำนวณ (Computational
+                    Thinking)</strong>
+                มุ่งเน้นการวิเคราะห์ปัญหาที่ซับซ้อนให้กลายเป็นส่วนย่อย การหาจินตภาพเชิงนามธรรม
+                และการออกแบบลำดับขั้นตอน (Algorithm) เพื่อใช้เป็นรากฐานในการแก้ปัญหาในชีวิตจริงและโลกดิจิทัล
+            </p>
+            <p>
+                เรียนรู้กระบวนการพัฒนาซอฟต์แวร์และ <strong>การเขียนโปรแกรม (Programming)</strong>
+                เพื่อสร้างสรรค์ชิ้นงานที่เป็นระบบ ครอบคลุมถึงการจัดการ ข้อมูลและสารสนเทศ (Data Science)
+                การรวบรวม ประมวลผล และการนำเสนอข้อมูลเพื่อการตัดสินใจอย่างมีประสิทธิภาพ
+            </p>
+            <p>
+                ตลอดจนสร้างความเข้าใจในการเป็น <strong>พลเมืองดิจิทัล (Digital Citizenship)</strong>
+                ที่มีความรับผิดชอบ รู้เท่าทันเทคโนโลยีสื่อสารและสารสนเทศ ปลอดภัยจากภัยคุกคามทางไซเบอร์
+                และประยุกต์ใช้เทคโนโลยีภายใต้จริยธรรมและกฎหมายคอมพิวเตอร์ เพื่อเป้าหมายในการสร้างนวัตกรรมที่ยั่งยืน
+            </p>
+
+            <div style="margin: 30px 0; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <a href="teaching_materials.html" target="_blank" class="btn-primary">📚 เอกสารประกอบการสอน</a>
+                <a href="tests.html" target="_blank" class="btn-primary"
+                    style="background-color: #F57F17; color: white;">📝 แบบทดสอบ</a>
+            </div>
+
+            <br>
+            <a href="subjects.html" style="color: var(--secondary-green); font-weight: bold;">← ย้อนกลับไปหน้าวิชา</a>
+        </div>
+    </div>
+
+    <footer>
+    </footer>
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>

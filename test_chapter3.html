@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบทดสอบ บทที่ 3 - วิชาวิทยาการคำนวณ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- ตั้งค่าตัวแปรสี --- */
+        :root {
+            --primary-green: #1B5E20;
+            --secondary-green: #4CAF50;
+            --test-orange: #F57F17;
+            --bg-white: #ffffff;
+            --bg-light: #f4f9f4;
+            --text-dark: #333333;
+            --text-light: #ffffff;
+        }
+
+        /* --- Reset & Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            background-color: var(--primary-green);
+            color: var(--text-light);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            font-weight: 400;
+            transition: 0.3s;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background-color: var(--secondary-green);
+        }
+
+        /* Hamburger Menu (Mobile) */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        /* --- Content --- */
+        .content-container {
+            max-width: 900px;
+            /* Narrower for better reading */
+            margin: 40px auto;
+            padding: 20px;
+            flex: 1;
+            width: 100%;
+        }
+
+        h1 {
+            color: var(--test-orange);
+            margin-bottom: 5px;
+            font-size: 2.2rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        /* --- Quiz Styles --- */
+        .quiz-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-block {
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .question-block:last-of-type {
+            border-bottom: none;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-green);
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            background-color: var(--bg-light);
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .option-label:hover {
+            background-color: #e8f5e9;
+        }
+
+        .option-label input[type="radio"] {
+            margin-top: 5px;
+            transform: scale(1.2);
+            accent-color: var(--test-orange);
+        }
+
+        .option-text {
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        /* Result States */
+        .option-label.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .option-label.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background-color: var(--test-orange);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background-color: #E65100;
+        }
+
+        .btn-submit:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .result-box {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background-color: #E8F5E9;
+            border: 2px solid var(--secondary-green);
+            border-radius: 12px;
+            margin-top: 40px;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .score-text {
+            font-size: 3rem;
+            font-weight: 600;
+            color: var(--primary-green);
+            margin: 10px 0;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--primary-green);
+            height: 10px;
+            margin-top: auto;
+        }
+
+        /* --- Mobile Responsive --- */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background-color: var(--primary-green);
+                flex-direction: column;
+                align-items: center;
+                padding-top: 50px;
+                transition: 0.4s;
+                z-index: 1001;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .quiz-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                🏫 โรงเรียนวังทองพิทยาคม
+            </div>
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html">หน้าแรก</a></li>
+                    <li><a href="history.html">เกี่ยวกับเรา</a></li>
+                    <li><a href="subjects.html" class="active">วิชา</a></li>
+                    <li><a href="http://www.wtp.ac.th/mainpage" target="_blank">ติดต่อเรา</a></li>
+                </ul>
+            </nav>
+            <div class="hamburger" id="hamburger">
+                ☰
+            </div>
+        </div>
+    </header>
+
+    <div class="content-container">
+        <div style="margin-bottom: 20px;">
+            <a href="tests.html"
+                style="display: inline-flex; align-items: center; gap: 8px; color: #F57F17; font-weight: 600; text-decoration: none; padding: 10px 15px; border-radius: 8px; background-color: #fff3e0; transition: background-color 0.3s;">
+                <span>←</span> กลับไปหน้ารวมแบบทดสอบ
+            </a>
+        </div>
+        <h1>แบบทดสอบ บทที่ 3</h1>
+        <div class="subtitle">เรื่อง ข้อมูลและการรู้ดิจิทัล (Data Science & Digital Literacy)</div>
+
+        <div class="quiz-container">
+            <form id="quizForm">
+
+                <!-- ข้อ 1 -->
+                <div class="question-block" id="q1">
+                    <div class="question-text">1. ข้อมูลประเภทใดที่มีโครงสร้างชัดเจน
+                        และสามารถจัดเก็บในรูปแบบตารางหรือฐานข้อมูลเชิงสัมพันธ์ได้อย่างมีประสิทธิภาพสูงสุด?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q1" value="ก"> <span
+                                class="option-text">ก. ข้อมูลกึ่งโครงสร้าง (Semi-structured Data)</span></label>
+                        <label class="option-label"><input type="radio" name="q1" value="ข"> <span
+                                class="option-text">ข. ข้อมูลปฐมภูมิ (Primary Data)</span></label>
+                        <label class="option-label"><input type="radio" name="q1" value="ค"> <span
+                                class="option-text">ค. ข้อมูลเชิงโครงสร้าง (Structured Data)</span></label>
+                        <label class="option-label"><input type="radio" name="q1" value="ง"> <span
+                                class="option-text">ง. ข้อมูลไร้โครงสร้าง (Unstructured Data)</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 2 -->
+                <div class="question-block" id="q2">
+                    <div class="question-text">2. หากในชุดข้อมูลอายุของกลุ่มตัวอย่าง มีค่าหนึ่งระบุว่า "999 ปี"
+                        กระบวนการทำความสะอาดข้อมูล (Data Cleansing) ควรจัดการกับปัญหานี้ภายใต้ขั้นตอนใด?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q2" value="ก"> <span
+                                class="option-text">ก. การจัดการข้อมูลสูญหาย (Missing Values)</span></label>
+                        <label class="option-label"><input type="radio" name="q2" value="ข"> <span
+                                class="option-text">ข. การระบุและจัดการตัวแปรที่ผิดปกติ (Outliers)</span></label>
+                        <label class="option-label"><input type="radio" name="q2" value="ค"> <span
+                                class="option-text">ค. การแปลงรูปข้อมูล (Data Transformation)</span></label>
+                        <label class="option-label"><input type="radio" name="q2" value="ง"> <span
+                                class="option-text">ง. การรวมชุดข้อมูล (Data Integration)</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 3 -->
+                <div class="question-block" id="q3">
+                    <div class="question-text">3. การวิเคราะห์ข้อมูลเพื่อหาคำตอบว่า
+                        "ยอดขายสินค้าในไตรมาสหน้าจะมีแนวโน้มเป็นอย่างไร" จัดอยู่ในการวิเคราะห์ข้อมูลมิติใด?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q3" value="ก"> <span
+                                class="option-text">ก. การวิเคราะห์เชิงพรรณนา (Descriptive Analysis)</span></label>
+                        <label class="option-label"><input type="radio" name="q3" value="ข"> <span
+                                class="option-text">ข. การวิเคราะห์เชิงวินิจฉัย (Diagnostic Analysis)</span></label>
+                        <label class="option-label"><input type="radio" name="q3" value="ค"> <span
+                                class="option-text">ค. การวิเคราะห์เชิงพยากรณ์ (Predictive Analysis)</span></label>
+                        <label class="option-label"><input type="radio" name="q3" value="ง"> <span
+                                class="option-text">ง. การวิเคราะห์เชิงให้คำแนะนำ (Prescriptive Analysis)</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 4 -->
+                <div class="question-block" id="q4">
+                    <div class="question-text">4. ระบบประมวลผลที่ให้คำแนะนำว่า "บริษัทควรเพิ่มการผลิตสินค้า A อีก 20%
+                        เพื่อรองรับความต้องการช่วงเทศกาลและสร้างกำไรสูงสุด" เป็นผลลัพธ์จากการวิเคราะห์ระดับใด?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q4" value="ก"> <span
+                                class="option-text">ก. การวิเคราะห์เชิงพรรณนา (Descriptive Analysis)</span></label>
+                        <label class="option-label"><input type="radio" name="q4" value="ข"> <span
+                                class="option-text">ข. การวิเคราะห์เชิงวินิจฉัย (Diagnostic Analysis)</span></label>
+                        <label class="option-label"><input type="radio" name="q4" value="ค"> <span
+                                class="option-text">ค. การวิเคราะห์เชิงพยากรณ์ (Predictive Analysis)</span></label>
+                        <label class="option-label"><input type="radio" name="q4" value="ง"> <span
+                                class="option-text">ง. การวิเคราะห์เชิงให้คำแนะนำ (Prescriptive Analysis)</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 5 -->
+                <div class="question-block" id="q5">
+                    <div class="question-text">5. ในการทำ Data Visualization
+                        การนำปริมาณของข้อมูลมาแปลงเป็นขนาดความยาวของกราฟแท่ง
+                        หรือการใช้สีเข้ม-อ่อนที่แตกต่างกันเพื่อแยกหมวดหมู่ ตรงกับหลักการในข้อใด?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q5" value="ก"> <span
+                                class="option-text">ก. การเข้ารหัสเชิงภาพ (Visual Encoding)</span></label>
+                        <label class="option-label"><input type="radio" name="q5" value="ข"> <span
+                                class="option-text">ข. วากยสัมพันธ์ของการเล่าเรื่อง (Storytelling Syntax)</span></label>
+                        <label class="option-label"><input type="radio" name="q5" value="ค"> <span
+                                class="option-text">ค. การลดความซับซ้อนของมิติข้อมูล (Dimensionality
+                                Reduction)</span></label>
+                        <label class="option-label"><input type="radio" name="q5" value="ง"> <span
+                                class="option-text">ง. การทำความสะอาดข้อมูล (Data Cleansing)</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 6 -->
+                <div class="question-block" id="q6">
+                    <div class="question-text">6. สถาปัตยกรรมของ "ปัญญาประดิษฐ์ (AI)" ในระดับรากฐาน
+                        ถูกออกแบบและพัฒนาขึ้นโดยมีจุดประสงค์หลักเพื่อสิ่งใด?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q6" value="ก"> <span
+                                class="option-text">ก. แทนที่ระบบปฏิบัติการแบบดั้งเดิม (OS)
+                                ทั้งหมดในคอมพิวเตอร์</span></label>
+                        <label class="option-label"><input type="radio" name="q6" value="ข"> <span
+                                class="option-text">ข. ประมวลผลสมการทางคณิตศาสตร์พื้นฐานให้เร็วกว่าซีพียู
+                                (CPU)</span></label>
+                        <label class="option-label"><input type="radio" name="q6" value="ค"> <span
+                                class="option-text">ค. เลียนแบบกระบวนการอนุมาน การเรียนรู้
+                                และการตัดสินใจของมนุษย์</span></label>
+                        <label class="option-label"><input type="radio" name="q6" value="ง"> <span
+                                class="option-text">ง.
+                                ค้นหาและทำลายมัลแวร์ในระบบเครือข่ายอินเทอร์เน็ตแบบอัตโนมัติ</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 7 -->
+                <div class="question-block" id="q7">
+                    <div class="question-text">7. หากต้องการสร้าง AI ให้ตรวจจับรูปภาพแมว
+                        โดยผู้สร้างต้องป้อนภาพจำนวนมากที่มีการระบุป้ายกำกับ (Label) ไว้ชัดเจนว่า "นี่คือแมว"
+                        ให้ระบบเรียนรู้ กระบวนการนี้จัดอยู่ใน Machine Learning รูปแบบใด?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q7" value="ก"> <span
+                                class="option-text">ก. การเรียนรู้แบบมีผู้สอน (Supervised Learning)</span></label>
+                        <label class="option-label"><input type="radio" name="q7" value="ข"> <span
+                                class="option-text">ข. การเรียนรู้แบบไม่มีผู้สอน (Unsupervised Learning)</span></label>
+                        <label class="option-label"><input type="radio" name="q7" value="ค"> <span
+                                class="option-text">ค. การเรียนรู้แบบเสริมกำลัง (Reinforcement Learning)</span></label>
+                        <label class="option-label"><input type="radio" name="q7" value="ง"> <span
+                                class="option-text">ง. การประมวลผลภาษาธรรมชาติ (Natural Language
+                                Processing)</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 8 -->
+                <div class="question-block" id="q8">
+                    <div class="question-text">8. อัลกอริทึมการจัดกลุ่ม (Clustering)
+                        ที่ระบบสามารถค้นหาโครงสร้างหรือจัดกลุ่มลูกค้าที่มีพฤติกรรมคล้ายกันได้เองโดยไม่ต้องมีคนคอยบอกล่วงหน้า
+                        เป็นลักษณะเด่นของข้อใด?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q8" value="ก"> <span
+                                class="option-text">ก. การเรียนรู้แบบมีผู้สอน (Supervised Learning)</span></label>
+                        <label class="option-label"><input type="radio" name="q8" value="ข"> <span
+                                class="option-text">ข. การเรียนรู้แบบไม่มีผู้สอน (Unsupervised Learning)</span></label>
+                        <label class="option-label"><input type="radio" name="q8" value="ค"> <span
+                                class="option-text">ค. การเรียนรู้แบบเสริมกำลัง (Reinforcement Learning)</span></label>
+                        <label class="option-label"><input type="radio" name="q8" value="ง"> <span
+                                class="option-text">ง. โครงข่ายประสาทเทียม (Artificial Neural Networks)</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 9 -->
+                <div class="question-block" id="q9">
+                    <div class="question-text">9.
+                        ข้อมูลที่ผู้รวบรวมได้ทำการเก็บรวบรวมด้วยตนเองจากการลงพื้นที่สัมภาษณ์หรือทำแบบสอบถามโดยตรง
+                        จัดเป็นข้อมูลประเภทใด?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q9" value="ก"> <span
+                                class="option-text">ก. ข้อมูลทุติยภูมิ (Secondary Data)</span></label>
+                        <label class="option-label"><input type="radio" name="q9" value="ข"> <span
+                                class="option-text">ข. ข้อมูลปฐมภูมิ (Primary Data)</span></label>
+                        <label class="option-label"><input type="radio" name="q9" value="ค"> <span
+                                class="option-text">ค. ข้อมูลเชิงปริมาณ (Quantitative Data) เท่านั้น</span></label>
+                        <label class="option-label"><input type="radio" name="q9" value="ง"> <span
+                                class="option-text">ง. ข้อมูลเปิด (Open Data)</span></label>
+                    </div>
+                </div>
+
+                <!-- ข้อ 10 -->
+                <div class="question-block" id="q10">
+                    <div class="question-text">10. โครงสร้างทางคณิตศาสตร์ใน AI
+                        ที่จำลองการทำงานมาจากระบบประสาทของสมองมนุษย์ ซึ่งประกอบด้วยชั้นอินพุต (Input Layer) ชั้นซ่อน
+                        (Hidden Layer) และชั้นเอาต์พุต (Output Layer) เรียกว่าอะไร?</div>
+                    <div class="options-group">
+                        <label class="option-label"><input type="radio" name="q10" value="ก"> <span
+                                class="option-text">ก. ต้นไม้ตัดสินใจ (Decision Trees)</span></label>
+                        <label class="option-label"><input type="radio" name="q10" value="ข"> <span
+                                class="option-text">ข. แฮชฟังก์ชัน (Hash Function)</span></label>
+                        <label class="option-label"><input type="radio" name="q10" value="ค"> <span
+                                class="option-text">ค. พีชคณิตบูลีน (Boolean Algebra)</span></label>
+                        <label class="option-label"><input type="radio" name="q10" value="ง"> <span
+                                class="option-text">ง. โครงข่ายประสาทเทียม (Artificial Neural Networks)</span></label>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-submit" id="submitBtn">ส่งแบบทดสอบ</button>
+            </form>
+
+            <div class="result-box" id="resultBox">
+                <h3>ผลคะแนนสอบของคุณ</h3>
+                <div class="score-text"><span id="scoreDisplay">0</span> / 10</div>
+                <p id="feedbackText">เยี่ยมมาก! เลื่อนขึ้นไปด้านบนเพื่อดูเฉลยแต่ละข้อได้เลย</p>
+                <br>
+                <a href="tests.html"
+                    style="color: var(--secondary-green); font-weight: bold; text-decoration: underline;">กลับไปหน้ารวมแบบทดสอบ</a>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+    </footer>
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // --- Quiz System ---
+        const submitBtn = document.getElementById('submitBtn');
+        const resultBox = document.getElementById('resultBox');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const form = document.getElementById('quizForm');
+
+        // Answer Key for Chapter 3
+        const correctAnswers = {
+            q1: 'ค',
+            q2: 'ข',
+            q3: 'ค',
+            q4: 'ง',
+            q5: 'ก',
+            q6: 'ค',
+            q7: 'ก',
+            q8: 'ข',
+            q9: 'ข',
+            q10: 'ง'
+        };
+
+        submitBtn.addEventListener('click', () => {
+            let score = 0;
+            let answeredCount = 0;
+            const totalQuestions = Object.keys(correctAnswers).length;
+
+            // Basic validation to check if all answered
+            for (let i = 1; i <= totalQuestions; i++) {
+                const radios = document.getElementsByName('q' + i);
+                let isAnswered = false;
+                for (let r of radios) {
+                    if (r.checked) isAnswered = true;
+                }
+                if (isAnswered) answeredCount++;
+            }
+
+            if (answeredCount < totalQuestions) {
+                if (!confirm('คุณยังทำแบบทดสอบไม่ครบทุกข้อ ยืนยันที่จะส่งคำตอบหรือไม่?')) {
+                    return;
+                }
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = "กำลังตรวจคำตอบ...";
+
+            // Check answers and apply classes
+            for (let i = 1; i <= totalQuestions; i++) {
+                const questionName = 'q' + i;
+                const correctAnswer = correctAnswers[questionName];
+                const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`);
+                const allRadiosInQ = document.getElementsByName(questionName);
+
+                // Disable all inputs
+                allRadiosInQ.forEach(radio => radio.disabled = true);
+
+                // Find the correct label and mark it
+                const correctRadio = document.querySelector(`input[name="${questionName}"][value="${correctAnswer}"]`);
+                if (correctRadio) {
+                    correctRadio.closest('.option-label').classList.add('correct');
+                }
+
+                if (selectedOption) {
+                    const selectedValue = selectedOption.value;
+                    const selectedLabel = selectedOption.closest('.option-label');
+
+                    if (selectedValue === correctAnswer) {
+                        score++;
+                    } else {
+                        selectedLabel.classList.add('incorrect');
+                    }
+                }
+            }
+
+            // Display Score
+            setTimeout(() => {
+                submitBtn.style.display = 'none';
+                scoreDisplay.innerText = score;
+                resultBox.style.display = 'block';
+
+                // Scroll to result slightly delay
+                resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 600); // Small artificial delay for effect
+        });
+
+    </script>
+</body>
+
+</html>
